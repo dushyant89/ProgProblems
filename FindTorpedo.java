@@ -61,13 +61,13 @@ class KMP
                     i = i + 1;
                 }
             } else {
-                int editDistance = computeLevenshteinDistance(
+         /*       int editDistance = computeLevenshteinDistance(
                         Arrays.copyOfRange(this.haystack, m, m + this.needle.length),
                         this.needle
                     );
                 if (3 > editDistance) {
                     result.add(m);
-                }
+                }*/
 
                 if (-1 < this.table[i]) {
                     m = m + i - this.table[i];
@@ -84,11 +84,11 @@ class KMP
 
 public class FindTorpedo
 {
-    private int minimum(int a, int b, int c) {
+    private static int minimum(int a, int b, int c) {
         return Math.min(Math.min(a, b), c);
     }
 
-    public static computeLevenshteinDistance(char [] lhs, char [] rhs)
+    private static int computeLevenshteinDistance(char [] lhs, char [] rhs)
     {
         int[][] distance = new int[lhs.length + 1][rhs.length + 1];
 
@@ -132,35 +132,26 @@ public class FindTorpedo
             testData[row++] = input.toCharArray();
         }
         br.close();
-
-        KMP kmp = new KMP();
-        for (int i = 0; i <= (testData.length - torpedo.length); i++) {
-            kmp.setHaystack(testData[i]);
-            // Start from the top. If the top row matches then
-            // only check the rows below.
-            kmp.setNeedle(torpedo[0]);
-
-            ArrayList<Integer> result = kmp.findNeedle(0);
-            // If there was an instance of one match.
-            if (0 < result.size()) {
-                // Iterate over the indices matched for the top row.
-                for (int j = 0; j < result.size(); j++) {
-                    int k;
-                    // Check for the subsequent rows down.
-                    for (k = 1; k < torpedo.length; k++) {
-                        kmp.setNeedle(torpedo[k]);
-                        kmp.setHaystack(testData[i+k]);
-                        // If there is a mismatch in any of
-                        // middle rows then break.
-                        if (0 == kmp.findNeedle(result.get(j)).size()) {
-                            break;
-                        }
-                    }
-                    // If all the rows matched, means object found.
-                    if (k == torpedo.length) {
-                        System.out.println((i + 1) + " " + (1 + result.get(j)));
+        int allowance = 0;
+        int max_allowance = 6;
+        for (int testDataRow = 0; testDataRow <= (testData.length - torpedo.length); testDataRow++) {
+            for (int testDataCol = 0; testDataCol <= (testData[0].length - torpedo[0].length); testDataCol++) {
+                int torpedoRow;
+                int editDistance;
+                for (torpedoRow = 0; torpedoRow < torpedo.length; torpedoRow++) {
+                    editDistance = computeLevenshteinDistance(
+                        torpedo[torpedoRow],
+                        Arrays.copyOfRange(testData[testDataRow], testDataCol, testDataCol+torpedo[0].length)
+                    );
+                    if (2 < editDistance) {
+                        allowance++;
+                        if (allowance > max_allowance) break;
                     }
                 }
+                if (torpedoRow == torpedo.length) {
+                    System.out.println((testDataRow + 1) + "," + (testDataCol+1));
+                }
+                allowance = 0;
             }
         }
     }
