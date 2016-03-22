@@ -1,0 +1,76 @@
+<html>
+
+<head>
+<title>Canvas Start</title>
+<link rel="stylesheet" href="style.css" ></link>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+
+<script type="text/javascript" >
+
+
+
+var myRectangle={
+ x:75,
+ y:75,
+ width:100,
+ height:100
+
+};
+
+$(document).ready(function()
+{
+  canvas= document.getElementById("myCanvas");
+  context= canvas.getContext("2d"); 
+  drawRect();
+ });
+
+function drawRect()
+{
+ context.beginPath();
+ context.rect(myRectangle.x,myRectangle.y,myRectangle.width,myRectangle.height);
+ context.fillStyle = '#8ED6FF';
+ context.fill();
+ context.strokeStyle = 'black';
+ context.stroke();   
+ interval=setInterval(animate,100);
+
+}
+
+function animate()
+{
+  context.clearRect(0,0,canvas.width,canvas.height);
+  newX=myRectangle.x+10;
+  myRectangle.x=newX;
+  
+ if(newX < canvas.width-myRectangle.width)
+ { 
+   context.beginPath();
+   context.rect(newX,myRectangle.y,myRectangle.width,myRectangle.height);
+   context.fillStyle = '#8ED6FF';
+   context.fill();
+   context.strokeStyle = 'black';
+   context.stroke();
+  }
+  else
+  {    
+    clearInterval(interval);
+    context.beginPath();
+   context.rect(newX,myRectangle.y,myRectangle.width,myRectangle.height);
+   context.fillStyle = '#8ED6FF';
+   context.fill();
+   context.strokeStyle = 'black';
+   context.stroke();
+  } 
+}
+
+</script>
+
+</head>
+
+<body>
+
+<canvas style="background:rgba(255,0,0,0.38);" width="500px" height="200px" id="myCanvas">  </canvas>
+
+</body>
+
+</html>
