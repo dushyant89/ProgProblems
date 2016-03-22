@@ -4,7 +4,7 @@
 import java.util.*;
 import java.io.*;
 
-public class Solution
+public class LargeFactorial
 {
     public static void main(String []args) throws Exception
     {
