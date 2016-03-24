@@ -61,13 +61,13 @@ class KMP
                     i = i + 1;
                 }
             } else {
-                int editDistance = computeLevenshteinDistance(
+         /*       int editDistance = computeLevenshteinDistance(
                         Arrays.copyOfRange(this.haystack, m, m + this.needle.length),
                         this.needle
                     );
                 if (3 > editDistance) {
                     result.add(m);
-                }
+                }*/
 
                 if (-1 < this.table[i]) {
                     m = m + i - this.table[i];
@@ -84,11 +84,14 @@ class KMP
 
 public class FindTorpedo
 {
-    private int minimum(int a, int b, int c) {
+    private static char [][] torpedo;
+    private static char [][] testData;
+
+    private static int minimum(int a, int b, int c) {
         return Math.min(Math.min(a, b), c);
     }
 
-    public static computeLevenshteinDistance(char [] lhs, char [] rhs)
+    private static int computeLevenshteinDistance(char [] lhs, char [] rhs)
     {
         int[][] distance = new int[lhs.length + 1][rhs.length + 1];
 
@@ -113,10 +116,33 @@ public class FindTorpedo
         return distance[lhs.length][rhs.length];
     }
 
+    private static int findMatches(int testDataRow, int testDataCol)
+    {
+        int matches = 0;
+        for (int i=0; i < torpedo.length; i++) {
+            for (int j=0; j < torpedo[0].length; j++) {
+                if (testData[testDataRow+i][testDataCol+j] == torpedo[i][j]) {
+                    matches++;
+                }
+            }
+        }
+        return matches;
+    }
+
+    private static void printMatches(int testDataRow, int testDataCol)
+    {
+        for(int i=testDataRow; i < testDataRow+torpedo.length; i++) {
+            for(int j=testDataCol; j < testDataCol+torpedo[0].length; j++) {
+                System.out.print(testData[i][j]);
+            }
+            System.out.println();
+        }
+    }
+
     public static void main(String[] args) throws Exception
     {
         BufferedReader br = new BufferedReader(new FileReader("SlimeTorpedo.blf"));
-        char [][] torpedo = new char[11][9];
+        torpedo = new char[11][9];
 
         String input;
         int row = 0;
@@ -127,39 +153,17 @@ public class FindTorpedo
 
         br = new BufferedReader(new FileReader("TestData.blf"));
         row = 0; input = "";
-        char [][] testData = new char[100][100];
+        testData = new char[100][100];
         while (null != (input = br.readLine())) {
             testData[row++] = input.toCharArray();
         }
         br.close();
-
-        KMP kmp = new KMP();
-        for (int i = 0; i <= (testData.length - torpedo.length); i++) {
-            kmp.setHaystack(testData[i]);
-            // Start from the top. If the top row matches then
-            // only check the rows below.
-            kmp.setNeedle(torpedo[0]);
-
-            ArrayList<Integer> result = kmp.findNeedle(0);
-            // If there was an instance of one match.
-            if (0 < result.size()) {
-                // Iterate over the indices matched for the top row.
-                for (int j = 0; j < result.size(); j++) {
-                    int k;
-                    // Check for the subsequent rows down.
-                    for (k = 1; k < torpedo.length; k++) {
-                        kmp.setNeedle(torpedo[k]);
-                        kmp.setHaystack(testData[i+k]);
-                        // If there is a mismatch in any of
-                        // middle rows then break.
-                        if (0 == kmp.findNeedle(result.get(j)).size()) {
-                            break;
-                        }
-                    }
-                    // If all the rows matched, means object found.
-                    if (k == torpedo.length) {
-                        System.out.println((i + 1) + " " + (1 + result.get(j)));
-                    }
+        for (int testDataRow = 0; testDataRow <= (testData.length - torpedo.length); testDataRow++) {
+            for (int testDataCol = 0; testDataCol <= (testData[0].length - torpedo[0].length); testDataCol++) {
+                int matches = findMatches(testDataRow, testDataCol);
+                if (0.66 <= (float)matches/99) {
+                    System.out.println(testDataRow + " " + testDataCol + " " + (float)matches/99);
+                    printMatches(testDataRow, testDataCol);
                 }
             }
         }
