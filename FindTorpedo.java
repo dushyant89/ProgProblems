@@ -84,6 +84,9 @@ class KMP
 
 public class FindTorpedo
 {
+    private static char [][] torpedo;
+    private static char [][] testData;
+
     private static int minimum(int a, int b, int c) {
         return Math.min(Math.min(a, b), c);
     }
@@ -113,10 +116,33 @@ public class FindTorpedo
         return distance[lhs.length][rhs.length];
     }
 
+    private static int findMatches(int testDataRow, int testDataCol)
+    {
+        int matches = 0;
+        for (int i=0; i < torpedo.length; i++) {
+            for (int j=0; j < torpedo[0].length; j++) {
+                if (testData[testDataRow+i][testDataCol+j] == torpedo[i][j]) {
+                    matches++;
+                }
+            }
+        }
+        return matches;
+    }
+
+    private static void printMatches(int testDataRow, int testDataCol)
+    {
+        for(int i=testDataRow; i < testDataRow+torpedo.length; i++) {
+            for(int j=testDataCol; j < testDataCol+torpedo[0].length; j++) {
+                System.out.print(testData[i][j]);
+            }
+            System.out.println();
+        }
+    }
+
     public static void main(String[] args) throws Exception
     {
         BufferedReader br = new BufferedReader(new FileReader("SlimeTorpedo.blf"));
-        char [][] torpedo = new char[11][9];
+        torpedo = new char[11][9];
 
         String input;
         int row = 0;
@@ -127,31 +153,18 @@ public class FindTorpedo
 
         br = new BufferedReader(new FileReader("TestData.blf"));
         row = 0; input = "";
-        char [][] testData = new char[100][100];
+        testData = new char[100][100];
         while (null != (input = br.readLine())) {
             testData[row++] = input.toCharArray();
         }
         br.close();
-        int allowance = 0;
-        int max_allowance = 6;
         for (int testDataRow = 0; testDataRow <= (testData.length - torpedo.length); testDataRow++) {
             for (int testDataCol = 0; testDataCol <= (testData[0].length - torpedo[0].length); testDataCol++) {
-                int torpedoRow;
-                int editDistance;
-                for (torpedoRow = 0; torpedoRow < torpedo.length; torpedoRow++) {
-                    editDistance = computeLevenshteinDistance(
-                        torpedo[torpedoRow],
-                        Arrays.copyOfRange(testData[testDataRow], testDataCol, testDataCol+torpedo[0].length)
-                    );
-                    if (2 < editDistance) {
-                        allowance++;
-                        if (allowance > max_allowance) break;
-                    }
+                int matches = findMatches(testDataRow, testDataCol);
+                if (0.66 <= (float)matches/99) {
+                    System.out.println(testDataRow + " " + testDataCol + " " + (float)matches/99);
+                    printMatches(testDataRow, testDataCol);
                 }
-                if (torpedoRow == torpedo.length) {
-                    System.out.println((testDataRow + 1) + "," + (testDataCol+1));
-                }
-                allowance = 0;
             }
         }
     }
