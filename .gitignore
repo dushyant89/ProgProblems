@@ -1,2 +1,4 @@
 # for .class java files
-!*.class
+*.class
+*.exe
+*.gitignore
