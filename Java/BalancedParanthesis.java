@@ -1,5 +1,5 @@
-// This is the text editor interface.
-// Anything you type or change here will be seen by the other person in real time.
+// This program checks if the input string given by the user
+// contains a balanced set of paranthesis.
 
 import java.util.*;
 import java.io.*;
@@ -41,6 +41,7 @@ public class BalancedParanthesis
     {
         Scanner sc = new Scanner(System.in);
         String input = sc.next();
+        sc.close();
         System.out.println(isBalanced(input));
     }
 }
