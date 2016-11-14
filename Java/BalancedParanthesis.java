@@ -1,5 +1,7 @@
-// This program checks if the input string given by the user
-// contains a balanced set of paranthesis.
+/* 
+* This program checks if the input string given by the user
+* contains a balanced set of paranthesis. https://en.wikipedia.org/wiki/External_sorting
+*/
 
 import java.util.*;
 import java.io.*;
