@@ -34,9 +34,9 @@ public class BalancedParanthesis
 
         if (paranthesis_map.get('(') == 0 && paranthesis_map.get('{')==0 && paranthesis_map.get('[')==0) {
             return true;
-        } else {
-            return false;
         }
+        
+        return false;
     }
 
     public static void main(String []args) throws Exception
